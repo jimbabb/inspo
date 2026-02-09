@@ -14,97 +14,123 @@
             line-height: 1.5;
         }
 
-        .header {
+        /* Sticky header */
+        .top-bar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
             background: #fff;
             border-bottom: 1px solid #e0e0e0;
-            padding: 20px 40px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+
+        .header {
+            padding: 16px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .header h1 {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 600;
             color: #1d1d1f;
         }
 
-        .header h1 span { color: #6e6e73; font-weight: 400; }
+        .header h1 span { color: #6e6e73; font-weight: 400; font-size: 18px; }
 
         .controls {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             align-items: center;
         }
 
         .btn {
-            padding: 8px 20px;
+            padding: 8px 18px;
             border: none;
             border-radius: 8px;
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.15s;
         }
 
-        .btn-primary {
-            background: #0071e3;
-            color: #fff;
-        }
+        .btn:active { transform: scale(0.97); }
 
+        .btn-primary { background: #0071e3; color: #fff; }
         .btn-primary:hover { background: #0077ed; }
 
-        .btn-secondary {
-            background: #e8e8ed;
-            color: #1d1d1f;
-        }
-
+        .btn-secondary { background: #e8e8ed; color: #1d1d1f; }
         .btn-secondary:hover { background: #d2d2d7; }
 
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .info-row {
+            padding: 8px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #f0f0f0;
+            font-size: 13px;
         }
 
-        .stats-bar {
-            background: #fff;
-            padding: 12px 40px;
+        .stats {
             display: flex;
-            gap: 32px;
-            border-bottom: 1px solid #e0e0e0;
-            font-size: 14px;
+            gap: 24px;
         }
 
         .stat { color: #6e6e73; }
         .stat strong { color: #1d1d1f; }
 
+        .filters {
+            display: flex;
+            gap: 4px;
+        }
+
+        .filter-btn {
+            padding: 4px 12px;
+            border: 1px solid #d2d2d7;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            background: #fff;
+            color: #6e6e73;
+            transition: all 0.15s;
+        }
+
+        .filter-btn:hover { border-color: #0071e3; color: #0071e3; }
+        .filter-btn.active { background: #0071e3; color: #fff; border-color: #0071e3; }
+
         .progress-bar {
-            background: #fff3cd;
-            padding: 12px 40px;
-            font-size: 14px;
-            color: #856404;
+            background: #eef6ff;
+            padding: 10px 40px;
+            font-size: 13px;
+            color: #1d4ed8;
             display: none;
             align-items: center;
             gap: 10px;
+            border-top: 1px solid #dbeafe;
         }
 
         .progress-bar.visible { display: flex; }
 
         .spinner {
-            width: 16px;
-            height: 16px;
-            border: 2px solid #856404;
-            border-top-color: transparent;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #93c5fd;
+            border-top-color: #1d4ed8;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
+            flex-shrink: 0;
         }
 
         @keyframes spin { to { transform: rotate(360deg); } }
 
         .container {
-            max-width: 900px;
-            margin: 24px auto;
-            padding: 0 20px;
+            max-width: 880px;
+            margin: 20px auto;
+            padding: 0 20px 40px;
         }
 
         .empty-state {
@@ -113,20 +139,29 @@
             color: #6e6e73;
         }
 
-        .empty-state h2 { font-size: 20px; margin-bottom: 8px; color: #1d1d1f; }
+        .empty-state h2 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: #1d1d1f;
+        }
 
+        .empty-state p { max-width: 400px; margin: 0 auto; }
+
+        /* Paper cards */
         .paper-card {
             background: #fff;
             border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 16px;
+            padding: 20px 24px;
+            margin-bottom: 12px;
             border-left: 4px solid #e0e0e0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: box-shadow 0.15s;
         }
 
+        .paper-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
         .paper-card.high { border-left-color: #34c759; }
         .paper-card.medium { border-left-color: #ff9500; }
-        .paper-card.low { border-left-color: #e0e0e0; }
+        .paper-card.low { border-left-color: #d1d1d6; }
 
         .paper-top {
             display: flex;
@@ -136,27 +171,24 @@
         }
 
         .paper-title {
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 600;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
+            line-height: 1.35;
         }
 
-        .paper-title a {
-            color: #1d1d1f;
-            text-decoration: none;
-        }
-
+        .paper-title a { color: #1d1d1f; text-decoration: none; }
         .paper-title a:hover { color: #0071e3; }
 
         .score-badge {
             flex-shrink: 0;
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
             color: #fff;
         }
@@ -166,34 +198,39 @@
         .score-badge.low { background: #8e8e93; }
 
         .paper-meta {
-            font-size: 13px;
-            color: #6e6e73;
-            margin-bottom: 10px;
+            font-size: 12px;
+            color: #8e8e93;
+            margin-bottom: 8px;
         }
 
         .paper-hook {
-            font-size: 15px;
+            font-size: 14px;
             color: #1d1d1f;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             font-style: italic;
+            line-height: 1.45;
         }
 
         .sub-scores {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin-bottom: 12px;
+            gap: 6px;
+            margin-bottom: 10px;
         }
 
         .sub-score {
             background: #f5f5f7;
-            padding: 8px;
+            padding: 6px;
             border-radius: 6px;
             text-align: center;
-            font-size: 12px;
         }
 
-        .sub-score .label { color: #6e6e73; }
+        .sub-score .label {
+            font-size: 10px;
+            color: #8e8e93;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
 
         .sub-score .value {
             font-size: 18px;
@@ -203,17 +240,17 @@
 
         .tags {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             flex-wrap: wrap;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .tag {
-            font-size: 12px;
-            padding: 3px 10px;
-            border-radius: 12px;
-            background: #e8e8ed;
-            color: #1d1d1f;
+            font-size: 11px;
+            padding: 2px 9px;
+            border-radius: 10px;
+            background: #f0f0f5;
+            color: #6e6e73;
         }
 
         .tag.method { background: #e3f2fd; color: #1565c0; }
@@ -223,35 +260,48 @@
             background: #f0fdf4;
             border-radius: 6px;
             padding: 8px 12px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             color: #166534;
+            border: 1px solid #dcfce7;
         }
 
-        .abstract {
+        .abstract-text {
             font-size: 13px;
             color: #6e6e73;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
+            line-height: 1.5;
             display: none;
+            background: #fafafa;
+            padding: 10px 12px;
+            border-radius: 6px;
         }
 
-        .abstract.visible { display: block; }
+        .abstract-text.visible { display: block; }
 
         .actions {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             flex-wrap: wrap;
+            padding-top: 4px;
         }
 
-        .actions .btn { font-size: 13px; padding: 6px 14px; }
+        .actions .btn {
+            font-size: 12px;
+            padding: 5px 12px;
+            border-radius: 6px;
+        }
 
         .btn-linkedin { background: #0a66c2; color: #fff; }
         .btn-linkedin:hover { background: #004182; }
 
         .btn-save { background: #34c759; color: #fff; }
         .btn-save:hover { background: #2da44e; }
+        .btn-save:disabled { background: #86efac; color: #fff; }
 
-        .btn-dismiss { background: #f5f5f7; color: #8e8e93; }
-        .btn-dismiss:hover { background: #e8e8ed; }
+        .btn-shared { background: #dbeafe; color: #1d4ed8; cursor: default; }
+
+        .btn-dismiss { background: transparent; color: #aeaeb2; border: 1px solid #e5e5ea; }
+        .btn-dismiss:hover { background: #f5f5f7; color: #8e8e93; }
 
         /* LinkedIn modal */
         .modal-overlay {
@@ -268,79 +318,108 @@
 
         .modal {
             background: #fff;
-            border-radius: 12px;
+            border-radius: 14px;
             padding: 28px;
             max-width: 600px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
         }
 
         .modal h3 {
             font-size: 18px;
-            margin-bottom: 16px;
+            margin-bottom: 6px;
+        }
+
+        .modal .modal-hint {
+            font-size: 13px;
+            color: #8e8e93;
+            margin-bottom: 14px;
         }
 
         .modal textarea {
             width: 100%;
-            min-height: 200px;
-            border: 1px solid #e0e0e0;
+            min-height: 220px;
+            border: 1px solid #d2d2d7;
             border-radius: 8px;
-            padding: 12px;
+            padding: 14px;
             font-size: 14px;
             font-family: inherit;
             line-height: 1.6;
             resize: vertical;
+            color: #1d1d1f;
+        }
+
+        .modal textarea:focus {
+            outline: none;
+            border-color: #0071e3;
+            box-shadow: 0 0 0 3px rgba(0,113,227,0.15);
         }
 
         .modal .modal-actions {
             display: flex;
             gap: 8px;
-            margin-top: 16px;
+            margin-top: 14px;
             justify-content: flex-end;
         }
 
-        .copied-toast {
+        .toast {
             position: fixed;
-            bottom: 20px;
+            bottom: 24px;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%) translateY(20px);
             background: #1d1d1f;
             color: #fff;
             padding: 10px 24px;
             border-radius: 8px;
             font-size: 14px;
-            display: none;
+            opacity: 0;
+            transition: all 0.2s;
             z-index: 200;
+            pointer-events: none;
         }
 
-        .copied-toast.visible { display: block; }
+        .toast.visible {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
 
-        @media (max-width: 600px) {
-            .header { padding: 16px 20px; flex-direction: column; gap: 12px; }
-            .stats-bar { padding: 12px 20px; flex-wrap: wrap; gap: 16px; }
+        @media (max-width: 640px) {
+            .header { padding: 12px 16px; flex-direction: column; gap: 10px; }
+            .info-row { padding: 8px 16px; flex-direction: column; gap: 8px; }
             .sub-scores { grid-template-columns: repeat(2, 1fr); }
+            .container { padding: 0 12px 40px; }
+            .paper-card { padding: 16px; }
+            .progress-bar { padding: 10px 16px; }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Research Compass <span>/ Part and Sum</span></h1>
-        <div class="controls">
-            <button class="btn btn-primary" id="fetchBtn" onclick="fetchPapers()">Fetch New Papers</button>
-            <button class="btn btn-secondary" onclick="loadPapers()">Reload Feed</button>
+    <div class="top-bar">
+        <div class="header">
+            <h1>Research Compass <span>/ Part and Sum</span></h1>
+            <div class="controls">
+                <button class="btn btn-primary" id="fetchBtn" onclick="fetchPapers()">Fetch New Papers</button>
+                <button class="btn btn-secondary" onclick="loadPapers()">Reload Feed</button>
+            </div>
         </div>
-    </div>
-
-    <div class="stats-bar" id="statsBar">
-        <div class="stat">Papers: <strong id="statTotal">0</strong></div>
-        <div class="stat">High Relevance: <strong id="statHigh">0</strong></div>
-        <div class="stat">Saved: <strong id="statSaved">0</strong></div>
-    </div>
-
-    <div class="progress-bar" id="progressBar">
-        <div class="spinner"></div>
-        <span id="progressText">Fetching papers...</span>
+        <div class="info-row">
+            <div class="stats">
+                <div class="stat">Papers: <strong id="statTotal">0</strong></div>
+                <div class="stat">High Relevance: <strong id="statHigh">0</strong></div>
+                <div class="stat">Saved: <strong id="statSaved">0</strong></div>
+            </div>
+            <div class="filters">
+                <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+                <button class="filter-btn" onclick="setFilter('high', this)">Score 7+</button>
+                <button class="filter-btn" onclick="setFilter('medium', this)">Score 5+</button>
+            </div>
+        </div>
+        <div class="progress-bar" id="progressBar">
+            <div class="spinner"></div>
+            <span id="progressText">Fetching papers...</span>
+        </div>
     </div>
 
     <div class="container" id="feed">
@@ -354,7 +433,8 @@
     <div class="modal-overlay" id="linkedinModal">
         <div class="modal">
             <h3>LinkedIn Draft</h3>
-            <textarea id="linkedinText" readonly></textarea>
+            <p class="modal-hint">Edit the post below, then copy to clipboard.</p>
+            <textarea id="linkedinText"></textarea>
             <div class="modal-actions">
                 <button class="btn btn-secondary" onclick="closeModal()">Close</button>
                 <button class="btn btn-primary" onclick="copyPost()">Copy to Clipboard</button>
@@ -362,10 +442,18 @@
         </div>
     </div>
 
-    <div class="copied-toast" id="toast">Copied to clipboard</div>
+    <div class="toast" id="toast">Copied to clipboard</div>
 
     <script>
         let pollInterval = null;
+        let allPapers = [];
+        let currentFilter = 'all';
+
+        function formatSource(source) {
+            if (source === 'semantic_scholar') return 'Semantic Scholar';
+            if (source === 'arxiv') return 'arXiv';
+            return source || '';
+        }
 
         async function loadStats() {
             try {
@@ -383,21 +471,40 @@
             try {
                 const resp = await fetch('/api/papers');
                 const data = await resp.json();
-                renderPapers(data.papers);
+                allPapers = data.papers;
+                renderPapers();
                 loadStats();
             } catch (e) {
                 console.error('Paper load failed:', e);
             }
         }
 
-        function renderPapers(papers) {
+        function setFilter(filter, btn) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderPapers();
+        }
+
+        function renderPapers() {
             const feed = document.getElementById('feed');
 
+            let papers = allPapers;
+            if (currentFilter === 'high') {
+                papers = papers.filter(p => p.scores && p.scores.overall >= 7);
+            } else if (currentFilter === 'medium') {
+                papers = papers.filter(p => p.scores && p.scores.overall >= 5);
+            }
+
             if (!papers.length) {
+                const msg = allPapers.length > 0
+                    ? 'No papers match this filter. Try a different one.'
+                    : 'Click "Fetch New Papers" to get started.';
+                const title = allPapers.length > 0 ? 'No matching papers' : 'No papers yet';
                 feed.innerHTML = `
                     <div class="empty-state">
-                        <h2>No papers yet</h2>
-                        <p>Click "Fetch New Papers" to get started.</p>
+                        <h2>${title}</h2>
+                        <p>${msg}</p>
                     </div>`;
                 return;
             }
@@ -406,7 +513,9 @@
                 const s = p.scores;
                 const overall = s ? s.overall : 0;
                 const level = overall >= 7 ? 'high' : overall >= 5 ? 'medium' : 'low';
-                const authors = Array.isArray(p.authors) ? p.authors.slice(0, 3).join(', ') : p.authors;
+                const authorList = Array.isArray(p.authors) ? p.authors : [];
+                const authorsDisplay = authorList.slice(0, 3).join(', ');
+                const authorSuffix = authorList.length > 3 ? ' et al.' : '';
                 const abstractShort = (p.abstract || '').substring(0, 300);
 
                 let clientNote = '';
@@ -415,25 +524,26 @@
                 }
 
                 const isSaved = p.actions && p.actions.includes('saved');
+                const isShared = p.actions && p.actions.includes('team_share');
 
                 return `
                 <div class="paper-card ${level}">
                     <div class="paper-top">
-                        <div>
-                            <div class="paper-title"><a href="${esc(p.url)}" target="_blank">${esc(p.title)}</a></div>
-                            <div class="paper-meta">${esc(authors)}${authors && p.authors.length > 3 ? ' et al.' : ''} &middot; ${esc(p.pub_date || 'n/a')} &middot; ${esc(p.source)}</div>
+                        <div style="min-width:0">
+                            <div class="paper-title"><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a></div>
+                            <div class="paper-meta">${esc(authorsDisplay)}${authorSuffix} &middot; ${esc(p.pub_date || 'Date unknown')} &middot; ${formatSource(p.source)}</div>
                         </div>
                         ${s ? `<div class="score-badge ${level}">${overall.toFixed(1)}</div>` : ''}
                     </div>
 
-                    ${s && s.hook ? `<div class="paper-hook">${esc(s.hook)}</div>` : ''}
+                    ${s && s.hook && s.hook !== 'Scoring unavailable - will retry on next fetch' ? `<div class="paper-hook">${esc(s.hook)}</div>` : ''}
 
-                    ${s ? `
+                    ${s && overall > 0 ? `
                     <div class="sub-scores">
-                        <div class="sub-score"><div class="label">Synthetic Research</div><div class="value">${s.synthetic_research}</div></div>
+                        <div class="sub-score"><div class="label">Synth Research</div><div class="value">${s.synthetic_research}</div></div>
                         <div class="sub-score"><div class="label">MICORA</div><div class="value">${s.micora}</div></div>
-                        <div class="sub-score"><div class="label">Strategic Growth</div><div class="value">${s.strategic_growth}</div></div>
-                        <div class="sub-score"><div class="label">Thought Leadership</div><div class="value">${s.thought_leadership}</div></div>
+                        <div class="sub-score"><div class="label">Strategy</div><div class="value">${s.strategic_growth}</div></div>
+                        <div class="sub-score"><div class="label">Thought Lead</div><div class="value">${s.thought_leadership}</div></div>
                     </div>
                     ` : ''}
 
@@ -444,13 +554,16 @@
 
                     ${clientNote}
 
-                    <div class="abstract" id="abstract-${p.id}">${esc(abstractShort)}${p.abstract && p.abstract.length > 300 ? '...' : ''}</div>
+                    <div class="abstract-text" id="abstract-${p.id}">${esc(abstractShort)}${p.abstract && p.abstract.length > 300 ? '...' : ''}</div>
 
                     <div class="actions">
-                        <a href="${esc(p.url)}" target="_blank" class="btn btn-secondary">Read Paper</a>
+                        <a href="${esc(p.url)}" target="_blank" rel="noopener" class="btn btn-secondary">Read Paper</a>
                         <button class="btn btn-secondary" onclick="toggleAbstract(${p.id})">Abstract</button>
-                        <button class="btn btn-save" onclick="interact(${p.id}, 'saved')" ${isSaved ? 'disabled' : ''}>${isSaved ? 'Saved' : 'Save'}</button>
-                        <button class="btn btn-secondary" onclick="interact(${p.id}, 'team_share')">Share with Team</button>
+                        <button class="btn btn-save" onclick="savePaper(this, ${p.id})" ${isSaved ? 'disabled' : ''}>${isSaved ? 'Saved' : 'Save'}</button>
+                        ${isShared
+                            ? `<button class="btn btn-shared" disabled>Shared</button>`
+                            : `<button class="btn btn-secondary" onclick="sharePaper(this, ${p.id})">Share with Team</button>`
+                        }
                         ${overall >= 7 ? `<button class="btn btn-linkedin" onclick="linkedinDraft(${p.id})">LinkedIn Draft</button>` : ''}
                         <button class="btn btn-dismiss" onclick="dismiss(${p.id})">Dismiss</button>
                     </div>
@@ -466,8 +579,14 @@
         }
 
         function toggleAbstract(id) {
-            const el = document.getElementById('abstract-' + id);
-            el.classList.toggle('visible');
+            document.getElementById('abstract-' + id).classList.toggle('visible');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('visible');
+            setTimeout(() => toast.classList.remove('visible'), 2000);
         }
 
         async function fetchPapers() {
@@ -480,13 +599,11 @@
                 const data = await resp.json();
 
                 if (data.status === 'already_running') {
-                    // Already running, just poll
+                    showProgress('Fetch in progress...');
                 } else {
                     showProgress('Starting search...');
                 }
-
                 startPolling();
-
             } catch (e) {
                 console.error('Fetch failed:', e);
                 btn.disabled = false;
@@ -495,10 +612,8 @@
         }
 
         function showProgress(text) {
-            const bar = document.getElementById('progressBar');
-            const txt = document.getElementById('progressText');
-            bar.classList.add('visible');
-            txt.textContent = text;
+            document.getElementById('progressBar').classList.add('visible');
+            document.getElementById('progressText').textContent = text;
         }
 
         function hideProgress() {
@@ -514,6 +629,11 @@
                     document.getElementById('progressText').textContent = data.progress || 'Working...';
                     document.getElementById('progressBar').classList.add('visible');
 
+                    // Refresh the feed periodically so user sees papers appearing
+                    if (data.scored > 0 && data.scored % 5 === 0) {
+                        loadPapers();
+                    }
+
                     if (!data.running) {
                         clearInterval(pollInterval);
                         pollInterval = null;
@@ -528,39 +648,68 @@
             }, 2000);
         }
 
-        async function interact(paperId, action) {
+        async function savePaper(btn, paperId) {
+            btn.disabled = true;
+            btn.textContent = 'Saved';
             try {
                 await fetch('/api/interact', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ paper_id: paperId, action: action }),
+                    body: JSON.stringify({ paper_id: paperId, action: 'saved' }),
                 });
-                if (action === 'saved') {
-                    loadPapers();
-                }
                 loadStats();
+                showToast('Paper saved');
             } catch (e) {
-                console.error('Interact failed:', e);
+                console.error('Save failed:', e);
+                btn.disabled = false;
+                btn.textContent = 'Save';
+            }
+        }
+
+        async function sharePaper(btn, paperId) {
+            btn.textContent = 'Shared';
+            btn.className = 'btn btn-shared';
+            btn.disabled = true;
+            try {
+                await fetch('/api/interact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ paper_id: paperId, action: 'team_share' }),
+                });
+                showToast('Marked for team sharing');
+            } catch (e) {
+                console.error('Share failed:', e);
             }
         }
 
         async function dismiss(paperId) {
-            await interact(paperId, 'dismissed');
-            loadPapers();
+            try {
+                await fetch('/api/interact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ paper_id: paperId, action: 'dismissed' }),
+                });
+                loadPapers();
+            } catch (e) {
+                console.error('Dismiss failed:', e);
+            }
         }
 
         async function linkedinDraft(paperId) {
             const modal = document.getElementById('linkedinModal');
             const textarea = document.getElementById('linkedinText');
             textarea.value = 'Generating post...';
+            textarea.readOnly = true;
             modal.classList.add('visible');
 
             try {
                 const resp = await fetch(`/api/linkedin/${paperId}`, { method: 'POST' });
                 const data = await resp.json();
                 textarea.value = data.post || 'Generation failed.';
+                textarea.readOnly = false;
             } catch (e) {
                 textarea.value = 'Error generating post.';
+                textarea.readOnly = false;
             }
         }
 
@@ -571,15 +720,16 @@
         function copyPost() {
             const textarea = document.getElementById('linkedinText');
             navigator.clipboard.writeText(textarea.value).then(() => {
-                const toast = document.getElementById('toast');
-                toast.classList.add('visible');
-                setTimeout(() => toast.classList.remove('visible'), 2000);
+                showToast('Copied to clipboard');
             });
         }
 
-        // Close modal on overlay click
+        // Close modal on overlay click or Escape key
         document.getElementById('linkedinModal').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
         });
 
         // Initial load

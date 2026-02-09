@@ -26,10 +26,13 @@ async def search_arxiv(query: str, days_back: int = DAYS_LOOKBACK) -> list[dict]
         async with httpx.AsyncClient(timeout=30) as client:
             # Use ti+abs (title + abstract) for more targeted results
             # httpx handles URL encoding, so no need for quote()
+            # Wrap multi-word queries in quotes for phrase matching
+            # Use all: to search across title, abstract, and all fields
+            quoted = f'"{query}"'
             resp = await client.get(
                 ARXIV_API,
                 params={
-                    "search_query": f"ti:{query} OR abs:{query}",
+                    "search_query": f"all:{quoted}",
                     "start": 0,
                     "max_results": MAX_RESULTS_PER_QUERY,
                     "sortBy": "submittedDate",

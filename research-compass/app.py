@@ -230,9 +230,9 @@ async def run_fetch_and_score():
         fetch_status["total"] = len(papers)
         fetch_status["progress"] = f"Found {len(papers)} papers. Scoring..."
 
-        new_count = 0
-        for i, paper_data in enumerate(papers):
-            # Check if paper already exists
+        # First pass: filter out papers already in DB
+        new_papers = []
+        for paper_data in papers:
             existing = None
             if paper_data.get("arxiv_id"):
                 existing = (
@@ -246,9 +246,23 @@ async def run_fetch_and_score():
                     .filter(Paper.semantic_id == paper_data["semantic_id"])
                     .first()
                 )
+            if not existing:
+                # Also check by title to catch cross-source duplicates
+                existing = (
+                    db.query(Paper)
+                    .filter(Paper.title == paper_data["title"])
+                    .first()
+                )
+            if not existing:
+                new_papers.append(paper_data)
 
-            if existing:
-                continue
+        fetch_status["total"] = len(new_papers)
+        fetch_status["progress"] = (
+            f"Found {len(papers)} papers ({len(new_papers)} new). Scoring..."
+        )
+
+        new_count = 0
+        for i, paper_data in enumerate(new_papers):
 
             # Store paper
             db_paper = Paper(
@@ -275,7 +289,8 @@ async def run_fetch_and_score():
                 pass
 
             fetch_status["progress"] = (
-                f"Scoring paper {i+1}/{len(papers)}: {paper_data['title'][:60]}..."
+                f"Scoring paper {i+1} of {len(new_papers)}: "
+                f"{paper_data['title'][:50]}..."
             )
 
             result = score_paper(

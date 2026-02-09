@@ -28,8 +28,8 @@ class Paper(Base):
     __tablename__ = "papers"
 
     id = Column(Integer, primary_key=True, index=True)
-    arxiv_id = Column(String, unique=True, nullable=True)
-    semantic_id = Column(String, unique=True, nullable=True)
+    arxiv_id = Column(String, nullable=True, index=True)
+    semantic_id = Column(String, nullable=True, index=True)
     title = Column(String, nullable=False)
     abstract = Column(Text)
     authors = Column(Text)  # JSON string of author list
