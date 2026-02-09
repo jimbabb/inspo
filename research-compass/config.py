@@ -10,8 +10,8 @@ ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 CLAUDE_MODEL = "claude-sonnet-4-20250514"
 
 # Search Configuration
-DAYS_LOOKBACK = 7
-MAX_RESULTS_PER_QUERY = 15
+DAYS_LOOKBACK = 30
+MAX_RESULTS_PER_QUERY = 20
 
 # Standing Queries - Topics to monitor
 STANDING_QUERIES = [
@@ -37,7 +37,7 @@ SCORING_WEIGHTS = {
 BUSINESS_CONTEXT = """
 Part and Sum is a strategy firm that specializes in:
 
-## 1. Compass Rose (Synthetic Research Methodology)
+## 1. Synthetic Research Methodology
 - Hybrid human+AI research approach
 - Human qualitative interviews create foundation
 - AI synthetic personas scale insights rapidly
@@ -63,7 +63,7 @@ Part and Sum is a strategy firm that specializes in:
 SCORING_CRITERIA = {
     "synthetic_research": (
         "Synthetic Research Validation (30% weight): "
-        "Does this validate or challenge the Compass Rose hybrid human+AI methodology? "
+        "Does this validate or challenge Part and Sum's hybrid human+AI methodology? "
         "Insights on synthetic persona generation? Human-AI collaboration best practices?"
     ),
     "micora": (

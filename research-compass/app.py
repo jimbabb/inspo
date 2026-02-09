@@ -1,5 +1,6 @@
 """Research Compass - FastAPI backend for academic paper discovery and scoring."""
 
+import asyncio
 import json
 import logging
 from contextlib import asynccontextmanager
@@ -280,6 +281,9 @@ async def run_fetch_and_score():
             result = score_paper(
                 paper_data["title"], authors_display, paper_data["abstract"]
             )
+
+            # Brief pause between API calls to avoid rate limits
+            await asyncio.sleep(1)
 
             scores = result.get("scores", {})
             db_score = RelevanceScore(

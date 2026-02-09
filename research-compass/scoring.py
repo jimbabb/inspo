@@ -2,6 +2,7 @@
 
 import json
 import logging
+import time
 
 import anthropic
 
@@ -51,52 +52,67 @@ RESPOND WITH VALID JSON ONLY (no markdown, no explanation):
   "hook": "<one sentence why this matters to Part and Sum>",
   "linkedin_angle": "<if overall relevance is high, the counterintuitive insight worth sharing>",
   "client_application": "<if highly relevant, how to apply with clients>",
-  "methodology_connection": "<Compass Rose | MICORA | Integrated Growth>"
+  "methodology_connection": "<Synthetic Research | MICORA | Integrated Growth>"
 }}"""
 
-    try:
-        client = _get_client()
-        message = client.messages.create(
-            model=CLAUDE_MODEL,
-            max_tokens=600,
-            messages=[{"role": "user", "content": prompt}],
-        )
-        raw = message.content[0].text.strip()
+    # Retry up to 3 times with backoff
+    last_error = None
+    for attempt in range(3):
+        try:
+            client = _get_client()
+            message = client.messages.create(
+                model=CLAUDE_MODEL,
+                max_tokens=600,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            raw = message.content[0].text.strip()
 
-        # Handle possible markdown code fences
-        if raw.startswith("```"):
-            raw = raw.split("\n", 1)[1]
-            if raw.endswith("```"):
-                raw = raw[:-3]
-            raw = raw.strip()
+            # Handle possible markdown code fences
+            if raw.startswith("```"):
+                raw = raw.split("\n", 1)[1]
+                if raw.endswith("```"):
+                    raw = raw[:-3]
+                raw = raw.strip()
 
-        result = json.loads(raw)
-        scores = result["scores"]
+            result = json.loads(raw)
+            scores = result["scores"]
 
-        overall = (
-            scores["synthetic_research"] * SCORING_WEIGHTS["synthetic_research"]
-            + scores["micora"] * SCORING_WEIGHTS["micora"]
-            + scores["strategic_growth"] * SCORING_WEIGHTS["strategic_growth"]
-            + scores["thought_leadership"] * SCORING_WEIGHTS["thought_leadership"]
-        )
-        result["overall_score"] = round(overall, 2)
-        return result
+            overall = (
+                scores["synthetic_research"] * SCORING_WEIGHTS["synthetic_research"]
+                + scores["micora"] * SCORING_WEIGHTS["micora"]
+                + scores["strategic_growth"] * SCORING_WEIGHTS["strategic_growth"]
+                + scores["thought_leadership"] * SCORING_WEIGHTS["thought_leadership"]
+            )
+            result["overall_score"] = round(overall, 2)
+            return result
 
-    except Exception as e:
-        logger.error(f"Scoring failed for '{title}': {e}")
-        return {
-            "scores": {
-                "synthetic_research": 0,
-                "micora": 0,
-                "strategic_growth": 0,
-                "thought_leadership": 0,
-            },
-            "overall_score": 0,
-            "hook": "Scoring unavailable",
-            "linkedin_angle": "",
-            "client_application": "",
-            "methodology_connection": "Integrated Growth",
-        }
+        except json.JSONDecodeError as e:
+            logger.warning(f"JSON parse error scoring '{title}' (attempt {attempt+1}): {e}")
+            last_error = e
+            time.sleep(2)
+        except anthropic.RateLimitError as e:
+            logger.warning(f"Rate limited scoring '{title}' (attempt {attempt+1}), waiting...")
+            last_error = e
+            time.sleep(10 * (attempt + 1))
+        except Exception as e:
+            logger.error(f"Scoring failed for '{title}' (attempt {attempt+1}): {e}")
+            last_error = e
+            time.sleep(3)
+
+    logger.error(f"All scoring attempts failed for '{title}': {last_error}")
+    return {
+        "scores": {
+            "synthetic_research": 0,
+            "micora": 0,
+            "strategic_growth": 0,
+            "thought_leadership": 0,
+        },
+        "overall_score": 0,
+        "hook": "Scoring unavailable - will retry on next fetch",
+        "linkedin_angle": "",
+        "client_application": "",
+        "methodology_connection": "Integrated Growth",
+    }
 
 
 def generate_linkedin_post(title: str, abstract: str, hook: str, linkedin_angle: str) -> str:

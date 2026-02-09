@@ -1,10 +1,10 @@
 """Academic paper search module - arXiv and Semantic Scholar integration."""
 
+import asyncio
 import json
 import logging
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
-from urllib.parse import quote
 
 import httpx
 
@@ -24,10 +24,12 @@ async def search_arxiv(query: str, days_back: int = DAYS_LOOKBACK) -> list[dict]
     papers = []
     try:
         async with httpx.AsyncClient(timeout=30) as client:
+            # Use ti+abs (title + abstract) for more targeted results
+            # httpx handles URL encoding, so no need for quote()
             resp = await client.get(
                 ARXIV_API,
                 params={
-                    "search_query": f"all:{quote(query)}",
+                    "search_query": f"ti:{query} OR abs:{query}",
                     "start": 0,
                     "max_results": MAX_RESULTS_PER_QUERY,
                     "sortBy": "submittedDate",
@@ -47,9 +49,16 @@ async def search_arxiv(query: str, days_back: int = DAYS_LOOKBACK) -> list[dict]
 
             if title_el is None or summary_el is None:
                 continue
+            if title_el.text is None or summary_el.text is None:
+                continue
 
             title = " ".join(title_el.text.strip().split())
             abstract = " ".join(summary_el.text.strip().split())
+
+            # Skip the feed-level entries that aren't papers
+            if not abstract or len(abstract) < 50:
+                continue
+
             entry_id = id_el.text.strip() if id_el is not None else ""
 
             # Parse date
@@ -89,6 +98,7 @@ async def search_arxiv(query: str, days_back: int = DAYS_LOOKBACK) -> list[dict]
     except Exception as e:
         logger.error(f"arXiv search failed for '{query}': {e}")
 
+    logger.info(f"arXiv '{query}': found {len(papers)} papers")
     return papers
 
 
@@ -105,6 +115,7 @@ async def search_semantic_scholar(
                     "query": query,
                     "limit": MAX_RESULTS_PER_QUERY,
                     "fields": "paperId,title,abstract,authors,publicationDate,externalIds,url",
+                    "year": f"{datetime.now().year - 1}-",
                 },
             )
             resp.raise_for_status()
@@ -116,16 +127,21 @@ async def search_semantic_scholar(
             if not item.get("abstract"):
                 continue
 
+            # Check date if available, but still include papers with no date
             pub_date_str = item.get("publicationDate")
+            skip = False
             if pub_date_str:
                 try:
                     pub_date = datetime.strptime(pub_date_str, "%Y-%m-%d").replace(
                         tzinfo=timezone.utc
                     )
                     if pub_date < cutoff:
-                        continue
+                        skip = True
                 except ValueError:
                     pass
+
+            if skip:
+                continue
 
             external_ids = item.get("externalIds") or {}
             arxiv_id = external_ids.get("ArXiv")
@@ -150,6 +166,7 @@ async def search_semantic_scholar(
     except Exception as e:
         logger.error(f"Semantic Scholar search failed for '{query}': {e}")
 
+    logger.info(f"Semantic Scholar '{query}': found {len(papers)} papers")
     return papers
 
 
@@ -184,7 +201,10 @@ async def search_all_queries(
 
     for query in queries:
         arxiv_papers = await search_arxiv(query, days_back)
+        # Small delay to respect Semantic Scholar rate limits (100 req / 5 min)
+        await asyncio.sleep(1)
         ss_papers = await search_semantic_scholar(query, days_back)
+        await asyncio.sleep(1)
         all_papers.extend(arxiv_papers)
         all_papers.extend(ss_papers)
         logger.info(
